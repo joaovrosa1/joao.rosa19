@@ -1,0 +1,589 @@
+Aqui está um código Python mais completo e aprimorado, com todas as funcionalidades solicitadas e uma estrutura mais organizada:
+
+```python
+"""
+SISTEMA PROTEJE MULHER - Código Educacional Completo
+Desenvolvido para demonstrar conceitos de Python:
+- Variáveis e tipos de dados
+- Entrada de dados (input)
+- Estruturas condicionais (if/elif/else)
+- Funções
+- Listas e dicionários
+- Manipulação de datas
+- Tratamento de erros
+"""
+
+import os
+import sys
+import time
+import json
+from datetime import datetime
+from typing import Dict, List, Optional
+
+# ==================== CONFIGURAÇÕES INICIAIS ====================
+
+# Variáveis globais para armazenar dados
+USUARIOS_CADASTRADOS: Dict[str, dict] = {}
+DENUNCIAS: List[dict] = []
+CONTATOS_EMERGENCIA: List[dict] = []
+REGISTROS_ATENDIMENTO: List[dict] = []
+
+# Cores para terminal (opcional, melhora visualização)
+class Cores:
+    VERMELHO = '\033[91m'
+    VERDE = '\033[92m'
+    AMARELO = '\033[93m'
+    AZUL = '\033[94m'
+    ROSA = '\033[95m'
+    CIANO = '\033[96m'
+    RESET = '\033[0m'
+    NEGRITO = '\033[1m'
+
+# ==================== FUNÇÕES AUXILIARES ====================
+
+def limpar_tela():
+    """Limpa a tela do terminal"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def pausar(mensagem: str = "Pressione Enter para continuar..."):
+    """Pausa a execução do programa"""
+    input(f"\n{mensagem}")
+
+def exibir_titulo(titulo: str):
+    """Exibe um título formatado"""
+    print(f"\n{Cores.ROSA}{'='*60}{Cores.RESET}")
+    print(f"{Cores.NEGRITO}{titulo.center(60)}{Cores.RESET}")
+    print(f"{Cores.ROSA}{'='*60}{Cores.RESET}\n")
+
+def exibir_erro(mensagem: str):
+    """Exibe mensagem de erro"""
+    print(f"{Cores.VERMELHO}❌ ERRO: {mensagem}{Cores.RESET}")
+
+def exibir_sucesso(mensagem: str):
+    """Exibe mensagem de sucesso"""
+    print(f"{Cores.VERDE}✅ {mensagem}{Cores.RESET}")
+
+def exibir_aviso(mensagem: str):
+    """Exibe mensagem de aviso"""
+    print(f"{Cores.AMARELO}⚠️ {mensagem}{Cores.RESET}")
+
+def exibir_info(mensagem: str):
+    """Exibe mensagem informativa"""
+    print(f"{Cores.CIANO}ℹ️ {mensagem}{Cores.RESET}")
+
+def obter_opcao(min_opcao: int, max_opcao: int) -> int:
+    """Obtém uma opção válida do usuário dentro de um intervalo"""
+    while True:
+        try:
+            opcao = int(input(f"{Cores.AZUL}Escolha uma opção: {Cores.RESET}"))
+            if min_opcao <= opcao <= max_opcao:
+                return opcao
+            else:
+                exibir_erro(f"Opção inválida! Escolha entre {min_opcao} e {max_opcao}")
+        except ValueError:
+            exibir_erro("Digite um número válido!")
+
+# ==================== MENU PRINCIPAL ====================
+
+def exibir_menu_principal():
+    """Exibe o menu principal do sistema"""
+    limpar_tela()
+    print(f"{Cores.ROSA}{'🌸'*30}{Cores.RESET}")
+    print(f"{Cores.NEGRITO}{'SISTEMA PROTEJE MULHER'.center(60)}{Cores.RESET}")
+    print(f"{Cores.ROSA}{'🌸'*30}{Cores.RESET}")
+    print(f"\n{Cores.CIANO}{'Apoio e Proteção para Mulheres em Situação de Risco'}{Cores.RESET}\n")
+    
+    print("┌" + "─"*58 + "┐")
+    print("│ 1. 🚨 BOTÃO DE EMERGÊNCIA (Socorro Imediato)      │")
+    print("│ 2. 💬 CHAT DE AJUDA (Orientação Sigilosa)         │")
+    print("│ 3. 📝 CADASTRO DE USUÁRIO                         │")
+    print("│ 4. 📍 LOCALIZAÇÃO DE SERVIÇOS DE APOIO            │")
+    print("│ 5. 🕊️ DENÚNCIA ANÔNIMA                            │")
+    print("│ 6. 📚 INFORMAÇÕES SOBRE VIOLÊNCIA                 │")
+    print("│ 7. 📊 RELATÓRIO DE DENÚNCIAS (Admin)              │")
+    print("│ 8. 🚪 SAIR                                        │")
+    print("└" + "─"*58 + "┘")
+
+# ==================== FUNÇÃO 1: BOTÃO DE EMERGÊNCIA ====================
+
+def botao_emergencia():
+    """Simula o acionamento do botão de emergência com envio de alertas"""
+    exibir_titulo("🚨 BOTÃO DE EMERGÊNCIA - SOCORRO IMEDIATO 🚨")
+    
+    exibir_aviso("ATENÇÃO: Ao acionar este botão, sua localização será enviada")
+    print("para a Polícia Militar (190) e para seus contatos de emergência.")
+    print(f"{Cores.VERMELHO}Use apenas em caso de perigo iminente!{Cores.RESET}\n")
+    
+    confirmacao = input(f"{Cores.VERMELHO}Digite 'S' para confirmar emergência: {Cores.RESET}").upper()
+    
+    if confirmacao == 'S':
+        print(f"\n{Cores.VERMELHO}🔴 ENVIANDO ALERTA DE EMERGÊNCIA...{Cores.RESET}")
+        time.sleep(1)
+        
+        # Simulação do envio de localização
+        localizacao = "Rua das Flores, 123 - Centro (Localização obtida via GPS)"
+        data_hora = datetime.now().strftime("%d/%m/%Y às %H:%M:%S")
+        
+        print(f"\n📍 Localização capturada: {localizacao}")
+        print(f"🕐 Horário do acionamento: {data_hora}")
+        
+        if CONTATOS_EMERGENCIA:
+            print(f"\n{Cores.AMARELO}📞 Contatos de emergência acionados:{Cores.RESET}")
+            for contato in CONTATOS_EMERGENCIA:
+                print(f"   → {contato['nome']}: {contato['telefone']}")
+                time.sleep(0.5)
+        else:
+            exibir_aviso("Nenhum contato de emergência cadastrado.")
+        
+        print(f"\n{Cores.VERDE}✅ ALERTA ENVIADO COM SUCESSO!{Cores.RESET}")
+        print(f"\n{Cores.CIANO}🔹 Instruções de segurança:{Cores.RESET}")
+        print("   1. Ligue 190 se for possível falar com segurança")
+        print("   2. Busque um local seguro com saída para a rua")
+        print("   3. Mantenha o celular por perto e com bateria")
+        print("   4. Se possível, fique perto de pessoas conhecidas")
+        
+        # Registrar atendimento
+        REGISTROS_ATENDIMENTO.append({
+            "tipo": "EMERGÊNCIA",
+            "data": data_hora,
+            "localizacao": localizacao,
+            "contatos_acionados": len(CONTATOS_EMERGENCIA)
+        })
+        
+    elif confirmacao == 'N':
+        exibir_info("Emergência cancelada pelo usuário.")
+    else:
+        exibir_erro("Opção inválida. Emergência cancelada por segurança.")
+    
+    pausar()
+
+
+def chat_ajuda():
+    """Simula um chat de orientação com atendimento especializado"""
+    exibir_titulo("💬 CHAT DE AJUDA - Atendimento Sigiloso e Especializado 💬")
+    
+    print(f"{Cores.CIANO}Atendente Virtual: Olá! Sou a assistente virtual do Proteje Mulher.{Cores.RESET}")
+    print("Estou aqui para ajudar você com informações e orientações.\n")
+    
+    while True:
+        print("\n" + "─"*50)
+        print("Como posso ajudar você hoje?")
+        print("1. Estou sofrendo violência e quero orientação")
+        print("2. Quero ajudar uma amiga/familiar que está em situação de risco")
+        print("3. Quero saber mais sobre meus direitos")
+        print("4. Quero saber sobre medidas protetivas")
+        print("5. Encerrar atendimento")
+        
+        opcao = input(f"\n{Cores.AZUL}Escolha uma opção: {Cores.RESET}")
+        
+        if opcao == '1':
+            print(f"\n{Cores.ROSA}🤝 Atendente: Primeiramente, quero que saiba que você não está sozinha.{Cores.RESET}")
+            print("Sua segurança é o mais importante. Vou te orientar passo a passo:\n")
+            
+            print(f"{Cores.NEGRITO}📌 PASSO A PASSO PARA SUA SEGURANÇA:{Cores.RESET}")
+            print("1. 🔴 EM CASO DE PERIGO IMINENTE: Ligue 190 (Polícia Militar)")
+            print("2. 📞 BUSQUE ORIENTAÇÃO: Ligue 180 (Central de Atendimento à Mulher)")
+            print("3. 🏛️ REGISTRE A DENÚNCIA: Delegacia da Mulher mais próxima")
+            print("4. ⚖️ SOLICITE MEDIDAS PROTETIVAS: Peça ajuda na delegacia")
+            
+            print(f"\n{Cores.NEGRITO}📌 ORIENTAÇÕES IMPORTANTES:{Cores.RESET}")
+            print("• Guarde provas: mensagens, fotos, testemunhas")
+            print("• Crie uma rede de apoio com pessoas de confiança")
+            print("• Mantenha documentos importantes em local seguro")
+            print("• Estabeleça uma palavra-código com alguém de confiança")
+            
+        elif opcao == '2':
+            print(f"\n{Cores.ROSA}🤝 Atendente: É muito importante ter pessoas que se importam.{Cores.RESET}")
+            print("Aqui estão orientações para ajudar alguém em situação de violência:\n")
+            
+            print(f"{Cores.NEGRITO}✅ O QUE FAZER:{Cores.RESET}")
+            print("• Escute sem interromper e sem julgar")
+            print("• Acredite no relato - a vítima nunca é culpada")
+            print("• Ofereça abrigo temporário se possível")
+            print("• Incentive a denúncia, mas respeite o tempo dela")
+            print("• Ajude a criar um plano de segurança")
+            
+            print(f"\n{Cores.NEGRITO}❌ O QUE NÃO FAZER:{Cores.RESET}")
+            print("• Não pergunte 'por que ela não saiu antes'")
+            print("• Não aconselhe a voltar para o agressor")
+            print("• Não confronte o agressor pessoalmente")
+            print("• Não compartilhe informações sem consentimento")
+            
+        elif opcao == '3':
+            print(f"\n{Cores.ROSA}🤝 Atendente: Conhecer seus direitos é fundamental.{Cores.RESET}")
+            print(f"{Cores.NEGRITO}⚖️ SEUS DIREITOS GARANTIDOS PELA LEI MARIA DA PENHA:{Cores.RESET}\n")
+            
+            print("1. DIREITO À VIDA LIVRE DE VIOLÊNCIA")
+            print("   → Toda mulher tem direito a uma vida sem violência")
+            
+            print("\n2. DIREITO À MEDIDAS PROTETIVAS DE URGÊNCIA")
+            print("   → Afastamento do agressor do lar")
+            print("   → Proibição de aproximação da vítima")
+            print("   → Suspensão do porte de armas do agressor")
+            
+            print("\n3. DIREITO AO ATENDIMENTO ESPECIALIZADO")
+            print("   → Delegacias da Mulher")
+            print("   → Defensoria Pública")
+            print("   → Atendimento psicológico e social")
+            
+        elif opcao == '4':
+            print(f"\n{Cores.ROSA}🤝 Atendente: As medidas protetivas são uma das principais conquistas da lei.{Cores.RESET}\n")
+            
+            print(f"{Cores.NEGRITO}🔒 O QUE SÃO MEDIDAS PROTETIVAS?{Cores.RESET}")
+            print("São ordens judiciais que protegem a mulher em situação de risco.")
+            
+            print(f"\n{Cores.NEGRITO}📋 TIPOS DE MEDIDAS:{Cores.RESET}")
+            print("• Proibição de contato com a vítima")
+            print("• Afastamento do lar conjugal")
+            print("• Proibição de frequentar determinados lugares")
+            print("• Suspensão da posse de armas")
+            print("• Encaminhamento para programas de proteção")
+            
+            print(f"\n{Cores.NEGRITO}📌 COMO SOLICITAR:{Cores.RESET}")
+            print("1. Registrar Boletim de Ocorrência na Delegacia da Mulher")
+            print("2. O juiz tem até 48h para decidir")
+            print("3. As medidas são concedidas rapidamente em casos de risco")
+            
+        elif opcao == '5':
+            print(f"\n{Cores.ROSA}Atendente: Lembre-se: Ligue 180 sempre que precisar.{Cores.RESET}")
+            print("Você não está sozinha. Estamos aqui por você! 🌸")
+            break
+        else:
+            exibir_erro("Opção inválida. Por favor, escolha uma opção de 1 a 5.")
+        
+        pausar()
+        limpar_tela()
+        exibir_titulo("💬 CHAT DE AJUDA - Continuando atendimento 💬")
+
+
+
+def cadastrar_usuario():
+    """Cadastra um novo usuário no sistema com dados de segurança"""
+    exibir_titulo("📝 CADASTRO DE USUÁRIO - Área Segura e Sigilosa 📝")
+    
+    print(f"{Cores.CIANO}Seus dados serão protegidos com criptografia (simulação).{Cores.RESET}\n")
+    
+    # Dados pessoais
+    nome = input("Nome completo: ").strip()
+    while not nome:
+        exibir_erro("Nome não pode estar vazio!")
+        nome = input("Nome completo: ").strip()
+    
+    email = input("E-mail: ").strip()
+    telefone = input("Telefone para contato: ").strip()
+    
+    # Cadastrar contatos de emergência
+    contatos = []
+    print(f"\n{Cores.AMARELO}⚠️ Contatos de emergência são acionados no botão de socorro!{Cores.RESET}")
+    
+    while True:
+        add_contato = input("\nDeseja adicionar um contato de emergência? (S/N): ").upper()
+        if add_contato == 'S':
+            contato_nome = input("Nome do contato: ").strip()
+            contato_tel = input("Telefone do contato: ").strip()
+            contato_parentesco = input("Parentesco (opcional): ").strip()
+            
+            contatos.append({
+                "nome": contato_nome,
+                "telefone": contato_tel,
+                "parentesco": contato_parentesco if contato_parentesco else "Não informado"
+            })
+            exibir_sucesso("Contato adicionado com sucesso!")
+        elif add_contato == 'N':
+            break
+        else:
+            exibir_erro("Digite S para sim ou N para não.")
+    
+    # Palavra-chave de segurança
+    palavra_chave = input("\nCrie uma palavra-chave para situações de emergência: ").strip()
+    
+    # Gerar ID único
+    user_id = str(len(USUARIOS_CADASTRADOS) + 1).zfill(4)
+    
+    # Salvar dados
+    USUARIOS_CADASTRADOS[user_id] = {
+        "id": user_id,
+        "nome": nome,
+        "email": email,
+        "telefone": telefone,
+        "contatos_emergencia": contatos,
+        "palavra_chave": palavra_chave,
+        "data_cadastro": datetime.now().strftime("%d/%m/%Y %H:%M")
+    }
+    
+    # Atualizar lista global de contatos
+    global CONTATOS_EMERGENCIA
+    CONTATOS_EMERGENCIA = contatos
+    
+    print(f"\n{Cores.VERDE}{'='*50}{Cores.RESET}")
+    exibir_sucesso("CADASTRO REALIZADO COM SUCESSO!")
+    print(f"\n{Cores.NEGRITO}Seu ID de segurança: {user_id}{Cores.RESET}")
+    print(f"{Cores.AMARELO}⚠️ GUARDE ESTE ID EM LOCAL SEGURO!{Cores.RESET}")
+    print(f"{Cores.CIANO}Ele será usado para identificação em futuros atendimentos.{Cores.RESET}")
+    
+    pausar()
+
+# ==================== FUNÇÃO 4: LOCALIZAÇÃO DE SERVIÇOS ====================
+
+def localizar_servicos():
+    """Exibe serviços de apoio próximos com informações detalhadas"""
+    exibir_titulo("📍 SERVIÇOS DE APOIO À MULHER - Rede de Proteção 📍")
+    
+    print(f"{Cores.CIANO}Selecione o tipo de serviço que deseja encontrar:{Cores.RESET}\n")
+    print("1. 🏛️ Delegacias da Mulher")
+    print("2. 🏥 Hospitais e Pronto-Atendimento")
+    print("3. 🏠 Casas de Abrigo (Localização Sigilosa)")
+    print("4. ⚖️ Defensoria Pública")
+    print("5. 🧠 Centro de Apoio Psicológico")
+    print("6. 📞 Todos os contatos de emergência")
+    
+    opcao = input(f"\n{Cores.AZUL}Escolha uma opção: {Cores.RESET}")
+    
+    if opcao == '1':
+        print(f"\n{Cores.NEGRITO}🏛️ DELEGACIAS DA MULHER - ATENDIMENTO 24H{Cores.RESET}\n")
+        print("Delegacia da Mulher - Centro")
+        print("📍 Endereço: Av. Brasil, 500 - Centro")
+        print("📞 Telefone: (11) 3333-1234")
+        print("🕐 Funcionamento: 24 horas\n")
+        
+        print("Delegacia da Mulher - Zona Norte")
+        print("📍 Endereço: Rua das Acácias, 123 - Jardim América")
+        print("📞 Telefone: (11) 3333-5678")
+        print("🕐 Funcionamento: 24 horas\n")
+        
+        print("Delegacia da Mulher - Zona Sul")
+        print("📍 Endereço: Av. Ipiranga, 789 - Vila Mariana")
+        print("📞 Telefone: (11) 3333-9012")
+        print("🕐 Funcionamento: 24 horas")
+        
+    elif opcao == '2':
+        print(f"\n{Cores.NEGRITO}🏥 HOSPITAIS COM ATENDIMENTO A VÍTIMAS DE VIOLÊNCIA{Cores.RESET}\n")
+        print("Hospital Municipal - Pronto Atendimento 24h")
+        print("📍 Endereço: Rua da Saúde, 456 - Centro")
+        print("📞 Telefone: (11) 4444-1234")
+        print("🔹 Atendimento: Emergências, coleta de vestígios, apoio psicológico\n")
+        
+        print("UPA Central - Unidade de Pronto Atendimento")
+        print("📍 Endereço: Av. das Nações, 890 - Jardim Europa")
+        print("📞 Telefone: (11) 4444-5678")
+        print("🔹 Atendimento: 24h com equipe especializada\n")
+        
+        print("Maternidade Santa Maria")
+        print("📍 Endereço: Rua da Maternidade, 234 - Centro")
+        print("📞 Telefone: (11) 4444-9012")
+        print("🔹 Atendimento: Gestantes vítimas de violência")
+        
+    elif opcao == '3':
+        print(f"\n{Cores.NEGRITO}🏠 CASAS DE ABRIGO - LOCALIZAÇÃO SIGILOSA{Cores.RESET}")
+        print(f"\n{Cores.AMARELO}⚠️ Para sua segurança, o endereço das casas abrigo é sigiloso.{Cores.RESET}")
+        print("Para ser acolhida em uma casa abrigo, entre em contato com:\n")
+        print("📞 Ligue 180 - Central de Atendimento à Mulher")
+        print("   → Solicite encaminhamento para casa abrigo")
+        print("   → O atendimento é 24h, gratuito e sigiloso")
+        print("   → Uma equipe especializada fará a avaliação e acolhimento")
+        
+    elif opcao == '4':
+        print(f"\n{Cores.NEGRITO}⚖️ DEFENSORIA PÚBLICA - NÚCLEO DE DEFESA DA MULHER{Cores.RESET}\n")
+        print("Núcleo Especializado de Defesa da Mulher")
+        print("📍 Endereço: Av. Independência, 200 - Sala 310")
+        print("📞 Telefone: (11) 5555-1234")
+        print("🕐 Horário: Segunda a sexta, 9h às 17h\n")
+        
+        print("Defensoria Pública - Plantão 24h")
+        print("📍 Endereço: Fórum Central - Rua da Justiça, 100")
+        print("📞 Telefone: (11) 5555-5678")
+        print("🕐 Atendimento: 24 horas para casos de violência doméstica")
+        
+    elif opcao == '5':
+        print(f"\n{Cores.NEGRITO}🧠 CENTROS DE APOIO PSICOLÓGICO{Cores.RESET}\n")
+        print("Centro de Referência da Mulher")
+        print("📍 Endereço: Rua do Acolhimento, 456 - Centro")
+        print("📞 Telefone: (11) 6666-1234")
+        print("🔹 Serviços: Psicologia, serviço social, orientação jurídica\n")
+        
+        print("CAPS - Centro de Atenção Psicossocial")
+        print("📍 Endereço: Av. da Saúde, 789 - Jardim das Flores")
+        print("📞 Telefone: (11) 6666-5678")
+        print("🔹 Serviços: Atendimento psicológico especializado")
+        
+    elif opcao == '6':
+        print(f"\n{Cores.NEGRITO}📞 CONTATOS DE EMERGÊNCIA - SALVE NO SEU CELULAR{Cores.RESET}\n")
+        print(f"{Cores.VERMELHO}190 - Polícia Militar (Emergência Imediata){Cores.RESET}")
+        print("   → Acione em caso de perigo iminente\n")
+        
+        print(f"{Cores.AMARELO}180 - Central de Atendimento à Mulher{Cores.RESET}")
+        print("   → Orientação sobre direitos e serviços")
+        print("   → Denúncias (pode ser anônimo)")
+        print("   → Funciona 24 horas\n")
+        
+        print("📱 WhatsApp: (61) 99656-5000")
+        print("   → Atendimento virtual da Central 180\n")
+        
+        print("📧 E-mail: ouvidoria@mulher.gov.br")
+        
+    else:
+        exibir_erro("Opção inválida!")
+    
+    pausar()
+
+# ==================== FUNÇÃO 5: DENÚNCIA ANÔNIMA ====================
+
+def denuncia_anonima():
+    """Registra uma denúncia anônima com validação de dados"""
+    exibir_titulo("🕊️ DENÚNCIA ANÔNIMA - Sua identidade será protegida 🕊️")
+    
+    print(f"{Cores.CIANO}⚠️ INFORMAÇÕES IMPORTANTES:{Cores.RESET}")
+    print("→ Sua identidade NÃO será revelada (denúncia anônima)")
+    print("→ A denúncia será encaminhada às autoridades competentes")
+    print("→ Quanto mais detalhes, mais rápida será a ação policial")
+    print(f"{Cores.VERMELHO}→ É proibido fazer denúncias falsas (Art. 340 do Código Penal){Cores.RESET}")
+    
+    print("\n" + "─"*50)
+    
+    # Coleta de informações
+    print(f"\n{Cores.NEGRITO}Informe os detalhes da situação:{Cores.RESET}")
+    
+    tipo_violencia = input("1. Tipo de violência (física/psicológica/sexual/moral/patrimonial): ").strip()
+    
+    print("\n2. Local onde ocorre:")
+    endereco = input("   Endereço: ").strip()
+    bairro = input("   Bairro: ").strip()
+    cidade = input("   Cidade: ").strip()
+    
+    local_completo = f"{endereco}, {bairro}, {cidade}"
+    
+    agressor = input("\n3. Informações sobre o agressor (nome, características): ").strip()
+    
+    print("\n4. Descreva a situação com detalhes:")
+    descricao = input("   (quando aconteceu, frequência, testemunhas, etc): ").strip()
+    
+    # Opção de contato (opcional)
+    print(f"\n{Cores.CIANO}Deseja deixar um contato para retorno?{Cores.RESET}")
+    print("(O contato permite que as autoridades solicitem mais informações, se necessário)")
+    contato = input("Digite 'S' para sim ou 'N' para não: ").upper()
+    
+    contato_info = ""
+    if contato == 'S':
+        contato_info = input("Telefone ou e-mail (opcional, será mantido em sigilo): ").strip()
+    
+    # Registrar denúncia
+    denuncia = {
+        "protocolo": len(DENUNCIAS) + 1,
+        "data": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+        "tipo_violencia": tipo_violencia,
+        "local": local_completo,
+        "agressor": agressor if agressor else "Não informado",
+        "descricao": descricao,
+        "contato": contato_info if contato == 'S' else "Anônimo"
+    }
+    
+    DENUNCIAS.append(denuncia)
+    
+    print(f"\n{Cores.VERDE}{'='*50}{Cores.RESET}")
+    exibir_sucesso("DENÚNCIA REGISTRADA COM SUCESSO!")
+    print(f"\n{Cores.NEGRITO}Protocolo de atendimento: {denuncia['protocolo']:04d}{Cores.RESET}")
+    
+    print(f"\n{Cores.AMARELO}📢 A denúncia será encaminhada para:{Cores.RESET}")
+    print("→ Central Ligue 180")
+    print("→ Ministério Público")
+    print("→ Delegacia Especializada no Atendimento à Mulher")
+    
+    print(f"\n{Cores.VERMELHO}🔹 Em caso de EMERGÊNCIA IMINENTE, ligue 190 imediatamente!{Cores.RESET}")
+    
+    pausar()
+
+# ==================== FUNÇÃO 6: INFORMAÇÕES SOBRE VIOLÊNCIA ====================
+
+def informacoes_violencia():
+    """Exibe informações educativas completas sobre violência contra a mulher"""
+    while True:
+        exibir_titulo("📚 INFORMAÇÕES SOBRE VIOLÊNCIA CONTRA A MULHER 📚")
+        
+        print(f"{Cores.CIANO}Selecione um tema:{Cores.RESET}\n")
+        print("1. 📖 Os 5 tipos de violência (Lei Maria da Penha)")
+        print("2. ⚠️ Sinais de alerta e identificação")
+        print("3. 📢 Como denunciar com segurança")
+        print("4. ⚖️ Direitos garantidos por lei")
+        print("5. ❓ Perguntas frequentes")
+        print("6. 📊 Estatísticas e dados importantes")
+        print("7. 🔙 Voltar ao menu principal")
+        
+        opcao = input(f"\n{Cores.AZUL}Escolha uma opção: {Cores.RESET}")
+        
+        if opcao == '1':
+            exibir_titulo("📖 OS 5 TIPOS DE VIOLÊNCIA - LEI MARIA DA PENHA")
+            print(f"{Cores.NEGRITO}1. VIOLÊNCIA FÍSICA{Cores.RESET}")
+            print("   → Tapas, empurrões, socos, chutes")
+            print("   → Uso de objetos para agredir")
+            print("   → Queimaduras, lesões com arma")
+            print("   → Qualquer conduta que ofenda a integridade corporal\n")
+            
+            print(f"{Cores.NEGRITO}2. VIOLÊNCIA PSICOLÓGICA{Cores.RESET}")
+            print("   → Ameaças, humilhação, xingamentos")
+            print("   → Isolamento social e familiar")
+            print("   → Controle excessivo (celular, roupas)")
+            print("   → Perseguição e vigilância constante\n")
+            
+            print(f"{Cores.NEGRITO}3. VIOLÊNCIA SEXUAL{Cores.RESET}")
+            print("   → Estupro e outras relações sexuais forçadas")
+            print("   → Impedir o uso de métodos contraceptivos")
+            print("   → Forçar atos que causam constrangimento")
+            print("   → Exploração sexual\n")
+            
+            print(f"{Cores.NEGRITO}4. VIOLÊNCIA PATRIMONIAL{Cores.RESET}")
+            print("   → Reter documentos pessoais")
+            print("   → Destruir objetos de valor")
+            print("   → Controlar o dinheiro e impedir o trabalho")
+            print("   → Dano a bens e pertences\n")
+            
+            print(f"{Cores.NEGRITO}5. VIOLÊNCIA MORAL{Cores.RESET}")
+            print("   → Calúnia, difamação e injúria")
+            print("   → Acusar de traição publicamente")
+            print("   → Fofocas e boatos prejudiciais")
+            print("   → Qualquer ofensa à honra e reputação")
+            
+        elif opcao == '2':
+            exibir_titulo("⚠️ SINAIS DE ALERTA - COMO IDENTIFICAR")
+            print(f"{Cores.NEGRITO}📌 Mudanças de comportamento na vítima:{Cores.RESET}")
+            print("→ Isolamento social (deixou de ver amigos e família)")
+            print("→ Uso constante de roupas de manga longa (esconder marcas)")
+            print("→ Justificativas vagas para lesões e hematomas")
+            print("→ Tristeza constante, ansiedade, baixa autoestima")
+            print("→ Medo excessivo do parceiro ou familiar")
+            print("→ Mudança repentina de humor e comportamento\n")
+            
+            print(f"{Cores.NEGRITO}📌 Comportamento do agressor:{Cores.RESET}")
+            print("→ Ciúmes excessivo e possessividade")
+            print("→ Controle do celular, senhas e redes sociais")
+            print("→ Impede que trabalhe, estude ou saia sozinha")
+            print("→ Humilha na frente de outras pessoas")
+            print("→ Ameaças de agressão ou morte")
+            print("→ Destruição de objetos durante discussões")
+            
+        elif opcao == '3':
+            exibir_titulo("📢 COMO DENUNCIAR - PASSOS PARA A SEGURANÇA")
+            print(f"{Cores.NEGRITO}🔴 1. EMERGÊNCIA IMINENTE:{Cores.RESET}")
+            print("   → Ligue 190 (Polícia Militar)")
+            print("   → Busque um local seguro com saída")
+            print("   → Se possível, chame por ajuda de vizinhos\n")
+            
+            print(f"{Cores.NEGRITO}📞 2. DENÚNCIA OU ORIENTAÇÃO:{Cores.RESET}")
+            print("   → Ligue 180 (Central de Atendimento à Mulher)")
+            print("   → Atendimento 24h, gratuito e sigiloso")
+            print("   → Pode ser feito anonimamente\n")
+            
+            print(f"{Cores.NEGRITO}🏛️ 3. REGISTRAR BOLETIM DE OCORRÊNCIA:{Cores.RESET}")
+            print("   → Delegacia da Mulher (especializada)")
+            print("   → Delegacia Comum (se não houver especializada)")
+            print("   → Leve documentos e provas, se possível\n")
+            
+            print(f"{Cores.NEGRITO}⚖️ 4. SOLICITAR MEDIDAS PROTETIVAS:{Cores.RESET}")
+            print("   → Peça na delegacia no momento do BO")
+            print("   → Em até 48h o juiz pode decidir")
+            print("   → O agressor pode ser afastado imediatamente")
+            
+        elif opcao == '4':
+            exibir_titulo("⚖️ DIREITOS GARANTIDOS PELA LEI MARIA DA PENHA")
+            print(f"{Cores.NEGRITO}✅ Direitos Fundamentais:{Cores.RESET}")
+            print("→ Direito a uma vida livre de violência")
+            print("→ Direito à integridade física, psí
